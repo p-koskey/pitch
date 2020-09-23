@@ -1,5 +1,5 @@
 from flask import render_template,request,redirect,url_for,abort
-from ..models import User,Pitch, Comments
+from ..models import User,Pitch, Comments, PitchLike,PitchDislike
 from . import main
 from .forms import UpdateProfile, PitchForm, CommentForm
 from flask_login import login_required,current_user
@@ -17,6 +17,8 @@ def index():
     count4 = len(pickup)
     pitches = Pitch.query.all()
 
+    comments = Comments.get_comments(Pitch.id)
+    print(comments)
     return render_template('index.html', title='Home', interview=interview, product=product, promote=promote, pickup = pickup
     ,count1=count1,count2=count2,count3=count3,count4=count4, pitches=pitches)
 
@@ -136,38 +138,36 @@ def promotion_pitches():
 
     return render_template("promote.html", pitches = pitches)
 
-@main.route('/pitch/<int:id>', methods = ['GET','POST'])
-def pitch(id):
-    pitch = Pitch.get_pitch(id)
+@main.route('/pitch/view/<pitch_id>', methods=['GET', 'POST'])
+def view_pitch(pitch_id):
+   
 
-    if request.args.get("like"):
-        pitch.likes = pitch.likes + 1
+    pitch = Pitch.query.filter_by(id=pitch_id).first()
+    
+    comments = Comments.get_comments(pitch_id)
 
-        db.session.add(pitch)
-        db.session.commit()
+    if current_user.is_authenticated:
+        comment_form = CommentForm()
+        if comment_form.validate_on_submit():
+            comments = comment_form.description.data
 
-        return redirect("/pitch/{pitch_id}".format(pitch_id=pitch.id))
+            new_comment = Comments(comment=comments,user_id=current_user.id,pitch_id = pitch_id)
 
-    elif request.args.get("dislike"):
-        pitch.dislikes = pitch.dislikes + 1
+            new_comment.save_comment()
+            
+            
+        comments = Comments.get_comments(pitch_id)
+    return render_template('pitch.html', pitch=pitch, comments=comments, pitch_id=pitch.id)
 
-        db.session.add(pitch)
-        db.session.commit()
+# @main.route('/comment/new/<pitch_id>', methods = ['GET','POST'])
+# @login_required
+# def pitch_comments(pitch_id):
+  
 
-        return redirect("/pitch/{pitch_id}".format(pitch_id=pitch.id))
-
-    comment_form = CommentForm()
-    if comment_form.validate_on_submit():
-        comments = comment_form.description.data
-
-        new_comment = Comments(comment=comments,user_id=current_user.id,pitch_id = pitch)
-
-        new_comment.save_comment()
-
-
-    comments = Comments.get_comments(pitch)
-
-    return render_template("pitch.html", pitch = pitch, comment_form = comment_form, comments = comments)
+    
+#         return redirect(url_for('.view_pitch', pitch_id=pitch_id))
+        
+#     return render_template("pitch.html", )
 
 @main.route('/user/<uname>/pitches')
 def user_pitches(uname):

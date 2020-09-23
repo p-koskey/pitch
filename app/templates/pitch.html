@@ -1,23 +1,24 @@
-{% import 'bootstrap/wtf.html' as wtf %}
-{% extends 'bootstrap/base.html' %}
-
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends 'base.html' %}
+<!-- content block -->
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="jumbotron">
-            {{ wtf.quick_form(comment_form) }}
-            <ul class="list-group">
-                {% for pitch in pitches %}
-                <a href="">
-                    <li class="list-item">
-                        {{ pitch.id }}
-                    </li>
-                    <h4>{{ pitch.description }}</h4>
-                    <h6>Posted by {{ user.username }}.</h6>
-                </a>
-                {% endfor %}
-            </ul>
+<div class="container mt-5">
+  <div class="card col-md-6" >
+    <div class="card-body">
+      <h5 class="card-title">{{pitch.title}}</h5>
+      <p class="card-text">{{pitch.content}}</p>
+      <div class="card-footer">
+        {% for comment in comments %}
+        <ul class="list-group">
+            <li class="list-group-item">{{comment.comment}}</li>
+        </ul>            
+
+          {% endfor %}
         </div>
+      <div class="container">
+        {{ wtf.quick_form(comment_form) }}
     </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
