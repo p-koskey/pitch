@@ -15,7 +15,7 @@ class User(UserMixin,db.Model):
     username = db.Column(db.String(255),index = True)
     email = db.Column(db.String(255),unique = True,index = True)
     pitch_id = db.Column(db.Integer,db.ForeignKey('pitches.id'))
-    comments = db.relationship('Comments', backref='author', lazy=True)
+    comments = db.relationship('Comments', backref='user', lazy=True)
     pass_secure = db.Column(db.String(255))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
@@ -41,21 +41,65 @@ class Pitch(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250), nullable=False)
-    date_posted = db.Column(db.DateTime(250), nullable=False, default=datetime.utcnow)
     content= db.Column(db.Text, nullable=False)
+    pitchtype = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     comments = db.relationship('Comments', backref='title', lazy='dynamic')
+    upvotes = db.Column(db.Integer)
+    downvotes = db.Column(db.Integer)
 
+    def save_pitch(self):
+        db.session.add(self)
+        db.session.commit()
 
-    def __repr__(self):
-        return f"Pitch('{self.title}', '{self.date_posted}')"
+    @classmethod
+    def get_pitches(cls, category):
+        pitches = Pitch.query.filter_by(pitchtype=category).all()
+        return pitches
+    
+    @classmethod
+    def get_all_pitches():
+        pitches = Pitch.query.all()
+
+        return pitches
+
+    @classmethod
+    def get_pitch(cls, id):
+        pitch = Pitch.query.filter_by(id=id).first()
+
+        return pitch
+    
+    @classmethod
+    def get_pitches_by_user_id(cls, user_id):
+        pitches = Pitch.query.filter_by(user_id=user_id).first()
+        user = User.query.filter_by(user_id = user_id)
+
+        return pitches
+
+    @classmethod
+    def count_pitches(cls, uname):
+        user = User.query.filter_by(username=uname).first()
+        pitches = Pitch.query.filter_by(user_id=user.id).all()
+
+        pitches_count = 0
+        for pitch in pitches:
+            pitches_count += 1
+
+        return pitches_count
 
 class Comments(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    comment = db.Column(db.String(255))
-    date_posted = db.Column(db.DateTime(250), nullable=False, default=datetime.utcnow)
-    pitch_id = db.Column(db.Integer, db.ForeignKey("pitches.id"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    __tablename__ = 'comments'
 
-    def __repr__(self):
-        return f"Comments('{self.comment}', '{self.date_posted}')"
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(1000))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    pitch_id = db.Column(db.Integer, db.ForeignKey("pitches.id"))
+
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_comments(cls, pitch):
+        comments = Comments.query.filter_by(pitch_id=pitch).all()
+        return comments

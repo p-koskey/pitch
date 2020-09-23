@@ -1,54 +1,26 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField,  BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField,  BooleanField, TextAreaField,RadioField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError,Required
-from app.models import User
+from app.models import User, Pitch, Comments
 
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators = [DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email',validators = [DataRequired(), Email()])
-    password = PasswordField('Password', validators = [DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators = [DataRequired(), EqualTo('password')])
-
-    submit = SubmitField('Sign Up')
-
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('That username is taken please choose a different one')
-
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user:
-            raise ValidationError('That email is taken please choose a different one')
-
-
-class LoginForm(FlaskForm):
-    email = StringField('Email',validators = [DataRequired(), Email()])
-    password = PasswordField('Password', validators = [DataRequired()])
-    remember = BooleanField('Remember Me')
-    submit = SubmitField('Login')
-
-
-class UpdateAccountForm(FlaskForm):
-    username = StringField('Username', validators = [DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email',validators = [DataRequired(), Email()])
-    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg', 'jpe'])])
-    submit = SubmitField('Update')
-
-    def validate_username(self, username):
-        if username.data != current_user.username:
-            user = User.query.filter_by(username=username.data).first()
-            if user:
-                raise ValidationError('That username is taken please choose a different one')
-
-    def validate_email(self, email):
-        if email.data != current_user.email:
-            user = User.query.filter_by(email=email.data).first()
-            if user:
-                raise ValidationError('That email is taken please choose a different one')
+class PitchForm(FlaskForm):
+    pitch_title = StringField('Title', validators = [Required()])
+    pitch_content = TextAreaField("Create your one minute pitch?", validators = [Required()])
+    pitch_type = RadioField('Label', choices = [('promotionpitch', 'Promotion Pitch'), ('interviewpitch', 'Interview Pitch'), ('pickuplines', 'Pick-Up Lines'), ('productpitch', 'Product Pitch')], validators = [Required()])
+    submit = SubmitField('Submit')
 
 class UpdateProfile(FlaskForm):
     bio = TextAreaField('Tell us about you.',validators = [Required()])
     submit = SubmitField('Submit')
+
+class CommentForm(FlaskForm):
+    description = TextAreaField('Add comments', validators = [Required()])
+    submit = SubmitField('Submit')
+
+class UpvoteForm(FlaskForm):
+    submit = SubmitField()
+
+class Downvote(FlaskForm):
+    submit = SubmitField()

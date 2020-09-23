@@ -1,0 +1,16 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+
+
+<p>Pitches</p>
+{% for pitch in pitches %}
+
+    <ul>
+        <li>{{pitch.content}}</li>
+    </ul>
+
+{% endfor %}
+
+{% endblock %}

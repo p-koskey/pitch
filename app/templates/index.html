@@ -1,6 +1,23 @@
-
 {% extends 'base.html' %}
 {% block content %}
-  <h1>Pitch!</h1>
-
+<div class="container ">
+  <h1 class="m-5 text-center">All Pitches</h1>
+  {{ fontawesome_html() }}
+      
+      <div class="list-group ">
+        <a href="{{url_for('main.interview_pitches')}}"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+               Interview Pitch
+            <span class="badge badge-primary badge-pill">{{count1}}</span></button></a>
+        <a href="{{url_for('main.product_pitches')}}"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+             Product Pitch
+            <span class="badge badge-primary badge-pill">{{count2}}</span></button></a>
+        <a href="{{url_for('main.promotion_pitches')}}"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+             Promotion Pitch
+            <span class="badge badge-primary badge-pill">{{count3}}</span></button></a>
+        <a href="{{url_for('main.pickup_lines')}}"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+              Pickup Lines
+            <span class="badge badge-primary badge-pill">{{count4}}</span></button></a>
+      </div>
+    </div>
 {% endblock content %}
+
