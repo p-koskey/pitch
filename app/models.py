@@ -19,7 +19,7 @@ class User(UserMixin,db.Model):
     pass_secure = db.Column(db.String(255))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
-
+    
 
     @property
     def password(self):
@@ -44,6 +44,7 @@ class Pitch(db.Model):
     content= db.Column(db.Text, nullable=False)
     pitchtype = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    posted = db.Column(db.DateTime, default=datetime.utcnow)
     comments = db.relationship('Comments', backref='title', lazy='dynamic')
     upvotes = db.Column(db.Integer)
     downvotes = db.Column(db.Integer)

@@ -15,8 +15,10 @@ def index():
     count3 = len(promote)
     pickup = Pitch.get_pitches('pickuplines')
     count4 = len(pickup)
+    pitches = Pitch.query.all()
+
     return render_template('index.html', title='Home', interview=interview, product=product, promote=promote, pickup = pickup
-    ,count1=count1,count2=count2,count3=count3,count4=count4)
+    ,count1=count1,count2=count2,count3=count3,count4=count4, pitches=pitches)
 
 @main.route('/register', methods=['GET','POST'])
 def register():
@@ -175,13 +177,7 @@ def user_pitches(uname):
     
 
     return render_template("profile/mypitch.html", user=user,pitches=pitches,pitches_count=pitches_count)
-
-@main.route('/profile/pitches')
-def get_all_pitches():
-
-    pitches = Pitch.query.all()
-
-    return render_template("profile/mypitch.html", pitches=pitches)
+ 
 
 
 

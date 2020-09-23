@@ -2,15 +2,29 @@
 
 {% block content %}
 
-
-
-<p>Pitches</p>
+<h1 class="text-center mt-3">My Pitches</h1>
+<div class="d-flex flex-wrap justify-content-center">
 {% for pitch in pitches %}
 
-    <ul>
-        <li>{{pitch.content}}</li>
-    </ul>
+<div class="col-lg-3 col-md-6 m-2 p-2">
+  <div class="card border-info shadow-lg" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important">
+    <div class="card-header text-center font-weight-bold">
+      {{pitch.title|upper}}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{pitch.content}}</h5>
+      <footer class="blockquote-footer">Posted on: <cite title="Source Title">{{pitch.posted.strftime('%Y-%m-%d')}}</cite></footer>
+      <footer class="blockquote-footer">By: {{user.username|capitalize}}</footer>
+      <p class="card-text"></p>
+    </div>
+    <div class="card-footer">
+        <div class="float-right">Comments</div>
+        <div class="float-left">Likes</div>
+        
+      </div>
+  </div>
+</div>
 
 {% endfor %}
-
+</div>
 {% endblock %}

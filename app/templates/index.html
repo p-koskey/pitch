@@ -4,20 +4,46 @@
   <h1 class="m-5 text-center">All Pitches</h1>
   {{ fontawesome_html() }}
       
-      <div class="list-group ">
-        <a href="{{url_for('main.interview_pitches')}}"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+      <ul class="list-group list-group-horizontal">
+        <a href="{{url_for('main.interview_pitches')}}"><li  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                Interview Pitch
-            <span class="badge badge-primary badge-pill">{{count1}}</span></button></a>
-        <a href="{{url_for('main.product_pitches')}}"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <span class="badge badge-primary badge-pill">{{count1}}</span></li></a>
+        <a href="{{url_for('main.product_pitches')}}"><li  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
              Product Pitch
-            <span class="badge badge-primary badge-pill">{{count2}}</span></button></a>
-        <a href="{{url_for('main.promotion_pitches')}}"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <span class="badge badge-primary badge-pill">{{count2}}</span></li></a>
+        <a href="{{url_for('main.promotion_pitches')}}"><li  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
              Promotion Pitch
-            <span class="badge badge-primary badge-pill">{{count3}}</span></button></a>
-        <a href="{{url_for('main.pickup_lines')}}"><button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <span class="badge badge-primary badge-pill">{{count3}}</span></li></a>
+        <a href="{{url_for('main.pickup_lines')}}"><li  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
               Pickup Lines
-            <span class="badge badge-primary badge-pill">{{count4}}</span></button></a>
-      </div>
+            <span class="badge badge-primary badge-pill">{{count4}}</span></li></a>
+        </ul>
     </div>
+
+    <h1 class="text-center mt-3">My Pitches</h1>
+<div class="d-flex flex-wrap justify-content-center">
+{% for pitch in pitches %}
+
+<div class="col-lg-3 col-md-6 m-2 p-2">
+  <div class="card border-info shadow-lg" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important">
+    <div class="card-header text-center font-weight-bold">
+      {{pitch.title|upper}}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{pitch.content}}</h5>
+      <footer class="blockquote-footer">Posted on: <cite title="Source Title">{{pitch.posted.strftime('%Y-%m-%d')}}</cite></footer>
+      <footer class="blockquote-footer">By: </footer>
+      <p class="card-text"></p>
+    </div>
+    <div class="card-footer">
+        <div class="float-right">Comments</div>
+        <div class="float-left">Likes</div>
+        
+      </div>
+  </div>
+</div>
+
+{% endfor %}
+</div>
 {% endblock content %}
 
