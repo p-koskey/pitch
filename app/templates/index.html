@@ -1,26 +1,29 @@
 {% extends 'base.html' %}
+{% block styles%}
+        {{ super() }}
+        <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
+        {% endblock %}
 {% block content %}
 <div class="container ">
   <h1 class="m-5 text-center">All Pitches</h1>
   {{ fontawesome_html() }}
       
-      <ul class="list-group list-group-horizontal">
-        <a href="{{url_for('main.interview_pitches')}}"><li  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+      <ul class="list-group d-flex flex-row justify-content-around ">
+        <a href="{{url_for('main.interview_pitches')}}"><li  class="list-group-item list-group-item-action">
                Interview Pitch
             <span class="badge badge-primary badge-pill">{{count1}}</span></li></a>
-        <a href="{{url_for('main.product_pitches')}}"><li  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <a href="{{url_for('main.product_pitches')}}"><li  class="list-group-item list-group-item-action">
              Product Pitch
             <span class="badge badge-primary badge-pill">{{count2}}</span></li></a>
-        <a href="{{url_for('main.promotion_pitches')}}"><li  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <a href="{{url_for('main.promotion_pitches')}}"><li  class="list-group-item list-group-item-action">
              Promotion Pitch
             <span class="badge badge-primary badge-pill">{{count3}}</span></li></a>
-        <a href="{{url_for('main.pickup_lines')}}"><li  class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <a href="{{url_for('main.pickup_lines')}}"><li  class="list-group-item list-group-item-action" >
               Pickup Lines
             <span class="badge badge-primary badge-pill">{{count4}}</span></li></a>
         </ul>
     </div>
 
-    <h1 class="text-center mt-3">My Pitches</h1>
 <div class="d-flex flex-wrap justify-content-center">
 {% for pitch in pitches %}
 
@@ -37,8 +40,24 @@
     </div>
     <div class="card-footer">
         <div class="float-right">Comments</div>
-        <div class="float-left">Likes</div>
-        
+        <div class="float-left"></div>
+        {% for pitch in pitches %}
+  {% if current_user.is_authenticated and current_user.has_liked_pitch(pitch) %}
+    <a href="{{ url_for('main.like_action', pitch_id=pitch.id, action='unlike') }}"><i class="fas fa-thumbs-up"></i></a>
+  {% else %}
+    <a href="{{ url_for('main.like_action', pitch_id=pitch.id, action='like') }}"><i class="fa fa-thumbs-up"></i></a>
+  {% endif %}
+  {{ pitch.likes.count() }}
+{% endfor %}
+
+{% for pitch in pitches %}
+{% if current_user.is_authenticated and current_user.has_disliked_pitch(pitch) %}
+  <a href="{{ url_for('main.dislike_action', pitch_id=pitch.id, action='undislike') }}"><i class="fas fa-thumbs-down"></i></a>
+{% else %}
+  <a href="{{ url_for('main.dislike_action', pitch_id=pitch.id, action='dislike') }}"><i class="fa fa-thumbs-down"></i></a>
+{% endif %}
+{{ pitch.dislikes.count() }}
+{% endfor %}
       </div>
   </div>
 </div>

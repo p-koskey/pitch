@@ -188,3 +188,27 @@ def get_pitches_by_user_id(user_id):
     pitches = Pitch.query.filter_by(user_id=user.id).all()
 
     return render_template("user_pitches.html", user = user, pitches=pitches, user_id=user_id)
+
+@main.route('/like/<int:pitch_id>/<action>')
+@login_required
+def like_action(pitch_id, action):
+    pitch = Pitch.query.filter_by(id=pitch_id).first_or_404()
+    if action == 'like':
+        current_user.like_pitch(pitch)
+        db.session.commit()
+    if action == 'unlike':
+        current_user.unlike_pitch(pitch)
+        db.session.commit()
+    return redirect(request.referrer)
+
+@main.route('/dislike/<int:pitch_id>/<action>')
+@login_required
+def dislike_action(pitch_id, action):
+    pitch = Pitch.query.filter_by(id=pitch_id).first_or_404()
+    if action == 'dislike':
+        current_user.dislike_pitch(pitch)
+        db.session.commit()
+    if action == 'undislike':
+        current_user.undislike_pitch(pitch)
+        db.session.commit()
+    return redirect(request.referrer)

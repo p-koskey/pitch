@@ -19,8 +19,8 @@ class User(UserMixin,db.Model):
     pass_secure = db.Column(db.String(255))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
-    
-
+    liked = db.relationship('PitchLike',foreign_keys='PitchLike.user_id', backref='user', lazy='dynamic')
+    disliked = db.relationship('PitchDislike',foreign_keys='PitchDislike.user_id', backref='user', lazy='dynamic')
     @property
     def password(self):
         raise AttributeError('You cannot read the password attribute')
@@ -33,8 +33,60 @@ class User(UserMixin,db.Model):
     def verify_password(self,password):
         return check_password_hash(self.pass_secure,password)
 
+    def like_pitch(self, pitch):
+        if not self.has_liked_pitch(pitch):
+            like = PitchLike(user_id=self.id, pitch_id=pitch.id)
+            dislike = PitchDislike(user_id=self.id, pitch_id=pitch.id)
+            db.session.add(like)
+            PitchDislike.query.filter_by(
+                user_id=self.id,
+                pitch_id=pitch.id).delete()
+    def unlike_pitch(self, pitch):
+        if self.has_liked_pitch(pitch):
+            PitchLike.query.filter_by(
+                user_id=self.id,
+                pitch_id=pitch.id).delete()
+
+    def has_liked_pitch(self, pitch):
+        return PitchLike.query.filter(
+            PitchLike.user_id == self.id,
+            PitchLike.pitch_id == pitch.id).count() > 0
+
+    def dislike_pitch(self, pitch):
+        if not self.has_disliked_pitch(pitch):
+            dislike = PitchDislike(user_id=self.id, pitch_id=pitch.id)
+            like = PitchLike(user_id=self.id, pitch_id=pitch.id)
+            db.session.add(dislike)
+            PitchLike.query.filter_by(
+                user_id=self.id,
+                pitch_id=pitch.id).delete()
+
+    def undislike_pitch(self, pitch):
+        if self.has_disliked_pitch(pitch):
+            PitchDislike.query.filter_by(
+                user_id=self.id,
+                pitch_id=pitch.id).delete()
+
+    def has_disliked_pitch(self, pitch):
+        return PitchDislike.query.filter(
+            PitchDislike.user_id == self.id,
+            PitchDislike.pitch_id == pitch.id).count() > 0
+    
+
     def __repr__(self):
         return f'User {self.username}'
+
+class PitchLike(db.Model):
+    __tablename__ = 'pitch_like'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
+
+class PitchDislike(db.Model):
+    __tablename__ = 'pitch_dislike'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
 
 class Pitch(db.Model):
     __tablename__ = 'pitches'
@@ -46,8 +98,8 @@ class Pitch(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     posted = db.Column(db.DateTime, default=datetime.utcnow)
     comments = db.relationship('Comments', backref='title', lazy='dynamic')
-    upvotes = db.Column(db.Integer)
-    downvotes = db.Column(db.Integer)
+    likes = db.relationship('PitchLike', backref='pitch', lazy='dynamic')
+    dislikes = db.relationship('PitchDislike', backref='pitch', lazy='dynamic')
 
     def save_pitch(self):
         db.session.add(self)
