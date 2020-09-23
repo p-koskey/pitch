@@ -145,9 +145,9 @@ def view_pitch(pitch_id):
     pitch = Pitch.query.filter_by(id=pitch_id).first()
     
     comments = Comments.get_comments(pitch_id)
-
+    comment_form = CommentForm()
     if current_user.is_authenticated:
-        comment_form = CommentForm()
+        
         if comment_form.validate_on_submit():
             comments = comment_form.description.data
 
@@ -155,9 +155,9 @@ def view_pitch(pitch_id):
 
             new_comment.save_comment()
             
-            
+
         comments = Comments.get_comments(pitch_id)
-    return render_template('pitch.html', pitch=pitch, comments=comments, pitch_id=pitch.id)
+    return render_template('pitch.html', pitch=pitch, comments=comments, pitch_id=pitch.id, comment_form = comment_form)
 
 # @main.route('/comment/new/<pitch_id>', methods = ['GET','POST'])
 # @login_required

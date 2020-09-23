@@ -2,22 +2,26 @@
 {% extends 'base.html' %}
 <!-- content block -->
 {% block content %}
-<div class="container mt-5">
-  <div class="card col-md-6" >
+<div class="container mt-5 d-flex flex-wrap justify-content-center">
+  <div class="card col-md-6 border-info shadow-lg" >
     <div class="card-body">
-      <h5 class="card-title">{{pitch.title}}</h5>
+      <h5 class="card-title text-center">{{pitch.title|upper}}</h5>
       <p class="card-text">{{pitch.content}}</p>
       <div class="card-footer">
+        <h4 class="text-center">Comments:</h4>
         {% for comment in comments %}
+        
         <ul class="list-group">
             <li class="list-group-item">{{comment.comment}}</li>
         </ul>            
 
           {% endfor %}
         </div>
+        {% if current_user.is_authenticated %}
       <div class="container">
         {{ wtf.quick_form(comment_form) }}
     </div>
+    {%endif%}
     </div>
   </div>
 </div>
