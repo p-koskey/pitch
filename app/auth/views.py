@@ -6,7 +6,9 @@ from .. import db
 from flask_login import login_user,logout_user,login_required
 from ..models import User
 from .forms import LoginForm,RegistrationForm
-from ..email import mail_message
+from flask_mail import Message
+from .. import mail
+
 
 @auth.route('/login',methods=['GET','POST'])
 def login():
@@ -33,7 +35,10 @@ def register():
         db.session.commit()
 
         flash('Your account has been created! You are now able to login','success')
-        #mail_message("Welcome to Pitches","email/welcome_user",user.email,user=user)
+        msg = Message(subject="Pitches Account", sender="testingemailpk6@gmail.com", recipients=[user.email])
+        msg.body = f"Hello "+ user.username.capitalize()+", Welcome to Pitches, We have just seen you have signed up for our application and want to welcome you to the family. Please enjoy."
+        mail.send(msg)
+        
         return redirect(url_for('auth.login'))
                
          
