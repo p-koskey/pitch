@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask import flash
 from wtforms import StringField,PasswordField,SubmitField
 from wtforms.validators import Required,Email,EqualTo
 from wtforms import StringField,PasswordField,BooleanField,SubmitField
@@ -15,11 +16,15 @@ class RegistrationForm(FlaskForm):
 
     def validate_email(self,data_field):
             if User.query.filter_by(email =data_field.data).first():
-                raise ValidationError('There is an account with that email')
+                flash ('There is an account with that email', 'danger')
 
     def validate_username(self,data_field):
         if User.query.filter_by(username = data_field.data).first():
-            raise ValidationError('That username is taken')
+            flash('That username is taken', 'danger')
+
+    def validate_password(self,pass1=password,pass2=password_confirm):
+        if pass1 != pass2:
+            flash('Passwords must match','danger')
 
 class LoginForm(FlaskForm):
     email = StringField('Your Email Address:',validators=[Required(),Email()])

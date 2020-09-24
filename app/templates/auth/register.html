@@ -8,6 +8,13 @@
 <div class="row mt-3">
 <div class="col-md-2"> </div>
 <div class="col-md-8">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}"> {{ message|capitalize }} </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
 
 {{wtf.quick_form(registration_form)}}
 
