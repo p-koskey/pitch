@@ -16,10 +16,9 @@ def index():
     pickup = Pitch.get_pitches('pickuplines')
     count4 = len(pickup)
     pitches = Pitch.query.all()
-
-    
+    users = User.query.all()    
     return render_template('index.html', title='Home', interview=interview, product=product, promote=promote, pickup = pickup
-    ,count1=count1,count2=count2,count3=count3,count4=count4, pitches=pitches)
+    ,count1=count1,count2=count2,count3=count3,count4=count4, pitches=pitches, users =users)
 
 @main.route('/user/<uname>')
 def profile(uname):
