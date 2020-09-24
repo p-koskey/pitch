@@ -14,8 +14,6 @@ class User(UserMixin,db.Model):
     id = db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(255),index = True)
     email = db.Column(db.String(255),unique = True,index = True)
-    pitch_id = db.relationship('Pitch',foreign_keys='Pitch.user_id', backref='user', lazy=True)
-    comments = db.relationship('Comments', foreign_keys='Comments.user_id',backref='user', lazy=True)
     pass_secure = db.Column(db.String(255))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
@@ -97,6 +95,7 @@ class Pitch(db.Model):
     pitchtype = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     posted = db.Column(db.DateTime, default=datetime.utcnow)
+    user = db.relationship("User", foreign_keys=user_id)
     comments = db.relationship('Comments', backref='title', lazy='dynamic')
     likes = db.relationship('PitchLike', backref='pitch', lazy='dynamic')
     dislikes = db.relationship('PitchDislike', backref='pitch', lazy='dynamic')
@@ -147,6 +146,7 @@ class Comments(db.Model):
     comment = db.Column(db.String(1000))
     posted = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = db.relationship("User", foreign_keys=user_id)
     pitch_id = db.Column(db.Integer, db.ForeignKey("pitches.id"))
 
     def save_comment(self):

@@ -15,7 +15,7 @@
         <div class="card-body">
           <h5 class="card-title">{{pitch.content}}</h5>
           <footer class="blockquote-footer">Posted on: <cite title="Source Title">{{pitch.posted.strftime('%Y-%m-%d')}}</cite></footer>
-          <footer class="blockquote-footer">By:{{pitch.user_id.user}} </footer>
+          <footer class="blockquote-footer">By : {{pitch.user.username|capitalize}} </footer>
           <p class="card-text"></p>
         </div>
         <div class="card-footer">

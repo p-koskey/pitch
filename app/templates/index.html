@@ -6,20 +6,20 @@
         {% endblock %}
 {% block content %}
 <div class="container ">
-  <h1 class="m-5 text-center">All Pitches</h1>
+  <h1 class="m-5 text-center"><i class="far fa-twitch"></i>  All Pitches</h1>
   {{ fontawesome_html() }}
       
       <ul class="list-group d-flex flex-row justify-content-around ">
-        <a href="{{url_for('main.interview_pitches')}}"><li  class="list-group-item list-group-item-action border-info" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important">
+        <a href="{{url_for('main.interview_pitches')}}"><li  class="list-group-item list-group-item-action list-group-item-info border-info" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important">
                Interview Pitch :
             <span class="badge badge-light badge-pill">{{count1}}</span></li></a>
-        <a href="{{url_for('main.product_pitches')}}"><li  class="list-group-item list-group-item-action border-info" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important">
+        <a href="{{url_for('main.product_pitches')}}"><li  class="list-group-item list-group-item-action list-group-item-info border-info" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important">
              Product Pitch :
             <span class="badge badge-light badge-pill">{{count2}}</span></li></a>
-        <a href="{{url_for('main.promotion_pitches')}}"><li  class="list-group-item list-group-item-action border-info" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important">
+        <a href="{{url_for('main.promotion_pitches')}}"><li  class="list-group-item list-group-item-action list-group-item-info border-info" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important">
              Promotion Pitch :
             <span class="badge badge-light badge-pill">{{count3}}</span></li></a>
-        <a href="{{url_for('main.pickup_lines')}}"><li  class="list-group-item list-group-item-action border-info" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important" >
+        <a href="{{url_for('main.pickup_lines')}}"><li  class="list-group-item list-group-item-action list-group-item-info border-info" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important" >
               Pickup Lines :
             <span class="badge badge-light badge-pill">{{count4}}</span></li></a>
         </ul>
@@ -36,6 +36,7 @@
     <div class="card-body">
       <h5 class="card-title">{{pitch.content}}</h5>
       <footer class="blockquote-footer">Posted on: <cite title="Source Title">{{pitch.posted.strftime('%Y-%m-%d')}}</cite></footer>
+      <footer class="blockquote-footer">By : {{pitch.user.username|capitalize}} </footer>
       <p class="card-text"></p>
     </div>
     <div class="card-footer">
