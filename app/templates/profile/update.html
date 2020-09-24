@@ -3,17 +3,19 @@
 
 {% block content %}
 <div class="container mt-5 "> 
-  <div class="row border border-dark rounded p-2">
-    <div class= "col-md-2"> 
-      {% if user == current_user %}
-      <form  action="{{url_for('main.update_pic',uname=user.username)}}" method="post" enctype = "multipart/form-data">
+  <div class="row ">
+    <div class= "col mt-5"> 
+      <h1 class="text-center">Update Profile </h1>
+      
+      <form class="form" action="" method="post" enctype = "multipart/form-data">
+        <p>Choose profile picture:   </p> 
+        
+        <input type="file"  name="photo" class="form-control" required> <br>
+        {{wtf.quick_form(form)}}
+      </form>
+        
+     <br>
   
-        <input type="file"  name="photo" class="form-control" required>
-        <input type="submit">
-        {% endif %}
-    </div>
-    <div class="col-md-8">
-  {{wtf.quick_form(form)}}
 </div>
 </div>
 </div>
