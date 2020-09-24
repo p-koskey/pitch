@@ -2,13 +2,49 @@
 {% import 'bootstrap/wtf.html' as wtf%}
 
 {% block content %}
-<div class="container"> 
-    {% for pitch in pitches %}
-        <ul>
-            <li>{{pitch.content}}</li>
-        </ul>
+{{ fontawesome_html() }}
 
+<h1 class="m-5 text-center">Interview Pitches</h1>
+<div class="d-flex flex-wrap justify-content-center">
+    {% for pitch in pitches %}
+    
+    <div class="col-lg-3 col-md-6 m-2 p-2">
+      <div class="card border-info shadow-lg" style="box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important">
+        <div class="card-header text-center font-weight-bold">
+          {{pitch.title|upper}}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{pitch.content}}</h5>
+          <footer class="blockquote-footer">Posted on: <cite title="Source Title">{{pitch.posted.strftime('%Y-%m-%d')}}</cite></footer>
+          <footer class="blockquote-footer">By:{{pitch.user_id.user}} </footer>
+          <p class="card-text"></p>
+        </div>
+        <div class="card-footer">
+            <div class="float-right">
+              <a href="{{url_for('main.view_pitch', pitch_id=pitch.id)}}">View Comments</a>
+            </div>
+            <div class="float-left"></div>
+           
+      {% if current_user.is_authenticated and current_user.has_liked_pitch(pitch) %}
+        <a href="{{ url_for('main.like_action', pitch_id=pitch.id, action='unlike') }}"><i class="fas fa-thumbs-up" style="color: green;"></i></a>
+      {% else %}
+        <a href="{{ url_for('main.like_action', pitch_id=pitch.id, action='like') }}"><i class="fa fa-thumbs-up" style="color: green;"></i></a>
+      {% endif %}
+      {{ pitch.likes.count() }}
+    
+    
+    {% if current_user.is_authenticated and current_user.has_disliked_pitch(pitch) %}
+      <a href="{{ url_for('main.dislike_action', pitch_id=pitch.id, action='undislike') }}"><i class="fas fa-thumbs-down" style="color: red;"></i></a>
+    {% else %}
+      <a href="{{ url_for('main.dislike_action', pitch_id=pitch.id, action='dislike') }}"><i class="fa fa-thumbs-down" style="color: red;"></i></a>
+    {% endif %}
+    {{ pitch.dislikes.count() }}
+    
+          </div>
+      </div>
+    </div>
+    
     {% endfor %}
-</div>
+    </div>
 
 {% endblock%}

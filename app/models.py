@@ -145,6 +145,7 @@ class Comments(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String(1000))
+    posted = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     pitch_id = db.Column(db.Integer, db.ForeignKey("pitches.id"))
 

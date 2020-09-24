@@ -12,7 +12,8 @@
         {% for comment in comments %}
         
         <ul class="list-group">
-            <li class="list-group-item">{{comment.comment}}</li>
+            <li class="list-group-item">{{comment.comment}} - {{comment.username}}
+            <cite title="Source Title">{{comment.posted.strftime('%Y-%m-%d')}}</cite></li>
         </ul>            
 
           {% endfor %}
