@@ -23,7 +23,7 @@ class RegistrationForm(FlaskForm):
             flash('That username is taken', 'danger')
 
     def validate_password(self,pass1=password,pass2=password_confirm):
-        if pass1 != pass2:
+        if pass1 is not pass2:
             flash('Passwords must match','danger')
 
 class LoginForm(FlaskForm):
