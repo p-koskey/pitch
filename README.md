@@ -4,7 +4,7 @@ This app allows users to use that one minute wisely. The users submit their one 
 
 ## Link
 
-Link : [News Sources](https://pitch-koskey.herokuapp.com/)
+Link : [Pitch app](https://pitch-koskey.herokuapp.com/)
 
 ## User Stories
 User would like : 
